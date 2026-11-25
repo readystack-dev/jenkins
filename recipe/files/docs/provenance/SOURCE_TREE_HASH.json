@@ -1,0 +1,9 @@
+{
+  "schema": "kitforge.source_tree_hash.v1",
+  "slug": "jenkins",
+  "repo": "https://github.com/jenkinsci/jenkins",
+  "ref": "jenkins-2.580.2",
+  "commit": "ea3f958268fe87ed86a5d1c2d90c5a99426b97ce",
+  "tree_listing_sha256": "2da58d3f9f824d6abe5561b5d8ffba34ef4f65ba11d9e55e3a5a6c77f8280a37",
+  "file_count": 12436
+}

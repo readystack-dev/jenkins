@@ -1,0 +1,7 @@
+image_manifest_digest=sha256:3bf9f435a18b3adf81a8089c291724a5510bcde32ef6060134938787649f75f7
+config_digest=sha256:9e5b43997c5d0a5541e71dabfe7d7261fdb0f32f62256541ad2aeefe8dd1ff02
+tag=readystack/jenkins:2.580.2-CE-ubuntu24.04-r5
+probe_port=8080
+probe_path=/health/
+probe_timeout=180
+verify_secret=JENKINS_ADMIN_PASSWORD
