@@ -5,7 +5,35 @@ The offline build kit for the Docker image `readystack/jenkins:2.580.2-CE-ubuntu
 - Release: [2.580.2-CE-ubuntu24.04-r5](https://github.com/readystack-dev/jenkins/releases/tag/2.580.2-CE-ubuntu24.04-r5)
 - Image: [`docker.io/readystack/jenkins:2.580.2-CE-ubuntu24.04-r5`](https://hub.docker.com/r/readystack/jenkins/tags), manifest digest `sha256:3bf9f435a18b3adf81a8089c291724a5510bcde32ef6060134938787649f75f7`
 - Product page: https://readystack.dev/products/jenkins
+- Source and build recipe: https://readystack.dev/products/jenkins/recipe
+- Build trail: https://readystack.dev/products/jenkins/trail/2.580.2-CE-ubuntu24.04-r5
 - Defects: this repository's Issues (defects recorded from 25 November 2026 on) and https://readystack.dev/defects.html?product=jenkins
+
+## The image
+
+Single container running jenkins.war on its embedded Winstone/Jetty container, with state under JENKINS_HOME. No external database.
+
+## Who uses Jenkins and why
+
+Development and DevOps teams who automate building, testing and deploying their software.
+
+Jenkins is an open-source automation server. With its plugins it runs the repetitive parts of the development workflow: builds, tests, static code analysis and deployments.
+
+A typical use: Each time a developer pushes code, Jenkins checks it out, builds it and runs the test suite, so a bug is caught as soon as it is introduced. When the tests pass on the main branch, the same pipeline deploys the build to a test environment.
+
+From the upstream project's own description: https://github.com/jenkinsci/jenkins, https://www.jenkins.io/.
+
+## This release
+
+- Docker Scout policy grade at release: **A** (94%), graded 2026-11-22 with `docker scout policy` (CLI 1.26.0, docker-default configuration).
+  - Docker Scout counts 49 packages with copyleft licences (CDDL, EPL, GPL, LGPL, MPL), 47 of them operating-system packages (it counts only packages whose licence it can read; the SBOM lists every component).
+- Signed with ReadyStack's release key (fingerprint `04daa92344a52dbc`): https://readystack.dev/keys/cosign.pub.
+- Runs as a non-root user (`jenkins`).
+- Attestations on the image: an SPDX SBOM and SLSA provenance v1.
+- Rebuilt from this kit with network egress blocked on 2026-11-22; the rebuilt image digest is the published one.
+- Base: Ubuntu 24.04.
+
+The current grade, measured again every day, is on https://readystack.dev/products/jenkins.
 
 Jenkins is distributed under its upstream licence (MIT AND CDDL-1.0); the kit contains upstream's source under that licence, and each vendored component under its own.
 
@@ -39,3 +67,5 @@ The build trail (`ReadyStack-jenkins-2.580.2-CE-ubuntu24.04-r5.trail.json`, sign
 ## This repository
 
 `recipe/` holds the kit's recipe files (Dockerfiles, build scripts, pins) as published at https://readystack.dev/products/jenkins/recipe. The complete kit is the release download. Each release is a tag here.
+
+— ReadyStack · https://readystack.dev
