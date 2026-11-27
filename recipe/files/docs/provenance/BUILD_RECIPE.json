@@ -1,7 +1,7 @@
 {
   "schema": "kitforge.build_recipe.v1",
   "slug": "jenkins",
-  "image": "readystack/jenkins:2.580.2-CE-ubuntu24.04-r5",
+  "image": "readystack/jenkins:2.580.2-CE-ubuntu24.04-r6",
   "build_method": "source-rebuild-java",
   "source": {
     "repo": "https://github.com/jenkinsci/jenkins",
@@ -52,8 +52,8 @@
     "install": {
       "extract_to": "/usr/share/jenkins"
     },
-    "source_date_epoch": 1795333781,
-    "source_date_epoch_provenance": "the time release 2.580.2-CE-ubuntu24.04-r5 was cut (2026-11-22T07:49:41Z), by scripts/retarget.py --rev-bump: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit ea3f958268fe, dated 2026-10-26T11:33:17Z (source.commit_epoch).",
+    "source_date_epoch": 1795533721,
+    "source_date_epoch_provenance": "the time release 2.580.2-CE-ubuntu24.04-r6 was cut (2026-11-24T15:22:01Z), by scripts/rerelease-agenda.py: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit ea3f958268fe, dated 2026-10-26T11:33:17Z (source.commit_epoch).",
     "_reproducibility_note": "Jenkins is unusually well placed here: its own pom.xml sets project.build.outputTimestamp (2026-08-31T16:31:21Z) and the README carries a Reproducible-Builds badge, so upstream already maintains byte-reproducibility of the war. Our MAVEN_ARGS injection overrides that property with this strategy's SOURCE_DATE_EPOCH, which is fine and arguably better \u2014 what matters is that the ONLINE and OFFLINE stages agree, and a single injected constant guarantees they do. NOT ENOUGH ON ITS OWN: upstream's reproducibility check evidently runs in a setting stable enough that stapler's identity-hash-ordered .stapler output repeats; ours did not -- see _source_prep_note for the one residual and its fix.",
     "_version_note": "jenkins-2.580.1 is the latest LTS GA (checked 2026-10-10 for r2: updates.jenkins.io/stable/latestCore.txt = 2.580.1, the newest LTS in repo.jenkins-ci.org's jenkins-war maven-metadata is 2.580.1, and jenkinsci/jenkins has no jenkins-2.580.2 tag or -rc yet; the latest WEEKLY is jenkins-2.585 and is deliberately not used \u2014 see _README). r2 is a revision release of 2.580.1. Java 17 is dead as of 2.555.1; the supported JDKs are 21 and 25.",
     "_offline_env_note": "offline_env is emitted into BOTH stages \u2014 the renderer does that deliberately, so the warmed cache matches the replay. Which means the offline-ONLY flags must NOT live here: COREPACK_ENABLE_NETWORK=0 in the online vendor stage would stop corepack fetching the Yarn 4 bundle, and the stage whose entire job is to WARM that cache would fail with nothing to warm. They are set inline on the offline mvn invocation instead. The render caught this before the first drive did.",

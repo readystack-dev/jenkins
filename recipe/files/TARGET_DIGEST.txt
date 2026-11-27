@@ -1,6 +1,6 @@
-image_manifest_digest=sha256:3bf9f435a18b3adf81a8089c291724a5510bcde32ef6060134938787649f75f7
-config_digest=sha256:9e5b43997c5d0a5541e71dabfe7d7261fdb0f32f62256541ad2aeefe8dd1ff02
-tag=readystack/jenkins:2.580.2-CE-ubuntu24.04-r5
+image_manifest_digest=sha256:0a47b8492231f46d0faeb661bd81f74924276f20078ed7d292f9c182663c5f64
+config_digest=sha256:8cfcc0099798f6724ee815e0f99468a52ac2ab35298e528ba578cffdcbc32dc9
+tag=readystack/jenkins:2.580.2-CE-ubuntu24.04-r6
 probe_port=8080
 probe_path=/health/
 probe_timeout=180

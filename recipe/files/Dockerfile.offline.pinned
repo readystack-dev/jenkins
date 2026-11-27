@@ -15,14 +15,14 @@ COPY vendored/caches/corepack/ /corepack/
 COPY vendored/caches/plugins/ /plugins/
 ENV MAVEN_OPTS="-Xmx4g"
 ENV COREPACK_HOME="/corepack"
-ENV MAVEN_ARGS="-Dproject.build.outputTimestamp=2026-11-22T07:49:41Z -Dmaven.buildNumber.revisionOnScmFailure=ea3f958268fe87ed86a5d1c2d90c5a99426b97ce"
+ENV MAVEN_ARGS="-Dproject.build.outputTimestamp=2026-11-24T15:22:01Z -Dmaven.buildNumber.revisionOnScmFailure=ea3f958268fe87ed86a5d1c2d90c5a99426b97ce"
 RUN cd /src && COREPACK_ENABLE_NETWORK=0 YARN_ENABLE_OFFLINE_MODE=1 mvn -o -B -am -pl war,bom -Pquick-build -Dmaven.repo.local=/m2 install
 RUN mkdir -p /usr/share/jenkins/ref/plugins && cp /src/war/target/jenkins.war /usr/share/jenkins/jenkins.war && cp -a /plugins/. /usr/share/jenkins/ref/plugins/ 2>/dev/null || true
 RUN test -s /usr/share/jenkins/jenkins.war && echo "war staged: $(du -h /usr/share/jenkins/jenkins.war | cut -f1)"
 # the release's JRE (eclipse-temurin:21-jre-noble: /opt/java/openjdk) with the application tree, the commands that
 # need a JRE, and what the two load (this image has ldd, not readelf)
 FROM eclipse-temurin:21-jre-noble@sha256:ac595159aa2209f07a2331efa8a8ce4278b77a7b76a9365a0f173786d5067a9e AS japp
-ARG SOURCE_DATE_EPOCH=1795333781
+ARG SOURCE_DATE_EPOCH=1795533721
 COPY --from=jbuild /usr/share/jenkins /usr/share/jenkins
 RUN set -eu; find /opt/java/openjdk /usr/share/jenkins -type f | LC_ALL=C sort | while read -r f; do \
       [ "$(od -An -c -N4 "$f" | tr -d ' ')" = 177ELF ] || continue; \
@@ -38,11 +38,11 @@ FROM golang:1.27.3-bookworm@sha256:972b4110ba0f47539a975c31e52c64765e1ff19f2d744
 WORKDIR /probe
 COPY rs-probe.go main.go
 COPY rs-probe.mod go.mod
-ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOFLAGS="-buildvcs=false" GOPROXY=off SOURCE_DATE_EPOCH=1795333781
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOFLAGS="-buildvcs=false" GOPROXY=off SOURCE_DATE_EPOCH=1795533721
 RUN go build -trimpath -ldflags='-s -w' -o /rs-probe .
 # the chiselled rootfs (vendored/chisel, cut by Dockerfile.vendor), the service user, the binaries
 FROM ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289 AS rootfs
-ARG SOURCE_DATE_EPOCH=1795333781
+ARG SOURCE_DATE_EPOCH=1795533721
 ADD vendored/chisel/rootfs.tar /rootfs/
 RUN printf 'jenkins:x:999:999::/var/jenkins_home:/bin/sh\n' >> /rootfs/etc/passwd && printf 'jenkins:x:999:\n' >> /rootfs/etc/group && \
     mkdir -p /rootfs/var/jenkins_home && chown -R 999:999 /rootfs/var/jenkins_home
@@ -66,11 +66,11 @@ RUN --mount=type=bind,source=vendored/chisel,target=/chisel set -eu; \
       { echo "/var/lib/dpkg/status does not list every package of vendored/chisel/packages.tsv" >&2; exit 1; }; \
     rm -rf /rootfs/var/log/dpkg.log /rootfs/var/log/alternatives.log /rootfs/var/log/apt /rootfs/var/cache/ldconfig/aux-cache /rootfs/var/cache/fontconfig
 FROM scratch
-ARG SOURCE_DATE_EPOCH=1795333781
+ARG SOURCE_DATE_EPOCH=1795533721
 COPY --from=rootfs /rootfs/ /
 ENV PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin JAVA_HOME=/opt/java/openjdk JENKINS_HOME=/var/jenkins_home JAVA_OPTS=-Djava.awt.headless=true JENKINS_OPTS=--httpPort=8080 LANG=C.UTF-8
 LABEL org.opencontainers.image.title="Jenkins"
-LABEL org.opencontainers.image.version="2.580.2-CE-ubuntu24.04-r5"
+LABEL org.opencontainers.image.version="2.580.2-CE-ubuntu24.04-r6"
 LABEL org.opencontainers.image.licenses="MIT AND CDDL-1.0"
 LABEL org.opencontainers.image.source="https://github.com/jenkinsci/jenkins"
 LABEL org.opencontainers.image.description="Automation server — Jenkins LTS built from source"

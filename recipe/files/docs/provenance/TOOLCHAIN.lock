@@ -9,10 +9,15 @@
       "min_version": "2.39-0ubuntu8.12",
       "package": "libc6",
       "reason": "CVE-2026-18374, CVE-2026-84243, CVE-2026-8674, CVE-2026-86805 \u2026: libc6 2.39-0ubuntu8.9 -> 2.39-0ubuntu8.12"
+    },
+    {
+      "min_version": "0.10.6-2ubuntu0.6",
+      "package": "libssh-4",
+      "reason": "USN-9187-1: libssh-4 0.10.6-2ubuntu0.5 -> 0.10.6-2ubuntu0.6"
     }
   ],
   "build_method": "source-rebuild-java",
-  "chain_id": 1193,
+  "chain_id": 1209,
   "dep_bumps": [],
   "expected_residuals": [],
   "images": [
@@ -92,9 +97,9 @@
     ],
     "ref": "jenkins-2.580.2",
     "repo": "https://github.com/jenkinsci/jenkins",
-    "source_date_epoch": 1795333781,
+    "source_date_epoch": 1795533721,
     "source_date_epoch_basis": "release-cut",
-    "source_date_epoch_provenance": "the time release 2.580.2-CE-ubuntu24.04-r5 was cut (2026-11-22T07:49:41Z), by scripts/retarget.py --rev-bump: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit ea3f958268fe, dated 2026-10-26T11:33:17Z (source.commit_epoch).",
+    "source_date_epoch_provenance": "the time release 2.580.2-CE-ubuntu24.04-r6 was cut (2026-11-24T15:22:01Z), by scripts/rerelease-agenda.py: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit ea3f958268fe, dated 2026-10-26T11:33:17Z (source.commit_epoch).",
     "source_prep": [
       "mkdir -p /corepack /plugins",
       "mkdir -p /tmp/rs-qp/src/org/kohsuke/stapler/jsr269 /tmp/rs-qp/classes && printf '%s\\n' 'package org.kohsuke.stapler.jsr269;' 'import java.io.OutputStream;' 'import java.nio.charset.StandardCharsets;' 'import java.util.HashSet;' 'import java.util.Map;' 'import java.util.Set;' 'import java.util.TreeMap;' 'import javax.annotation.processing.AbstractProcessor;' 'import javax.annotation.processing.RoundEnvironment;' 'import javax.annotation.processing.SupportedAnnotationTypes;' 'import javax.lang.model.SourceVersion;' 'import javax.lang.model.element.Element;' 'import javax.lang.model.element.ElementKind;' 'import javax.lang.model.element.ExecutableElement;' 'import javax.lang.model.element.TypeElement;' 'import javax.lang.model.element.VariableElement;' 'import javax.tools.Diagnostic;' 'import javax.tools.StandardLocation;' '@SupportedAnnotationTypes(\"org.kohsuke.stapler.QueryParameter\")' 'public class QueryParameterAnnotationProcessor extends AbstractProcessor {' '  private final Set<String> written = new HashSet<>();' '  @Override public SourceVersion getSupportedSourceVersion() { return SourceVersion.latest(); }' '  @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {' '    TypeElement qp = processingEnv.getElementUtils().getTypeElement(\"org.kohsuke.stapler.QueryParameter\");' '    if (qp == null) return false;' '    Map<String, String> out = new TreeMap<>();' '    for (Element p : roundEnv.getElementsAnnotatedWith(qp)) {' '      if (p.getKind() != ElementKind.PARAMETER) continue;' '      ExecutableElement m = (ExecutableElement) p.getEnclosingElement();' '      TypeElement t = (TypeElement) m.getEnclosingElement();' '      StringBuilder names = new StringBuilder();' '      for (VariableElement v : m.getParameters()) { if (names.length() > 0) names.append(\",\"); names.append(v.getSimpleName()); }' '      out.merge(t.getQualifiedName().toString().replace(\".\", \"/\") + \"/\" + m.getSimpleName() + \".stapler\", names.toString(), (a, b) -> a.compareTo(b) <= 0 ? a : b);' '    }' '    for (Map.Entry<String, String> e : out.entrySet()) {' '      if (!written.add(e.getKey())) continue;' '      try (OutputStream os = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, \"\", e.getKey()).openOutputStream()) {' '        os.write(e.getValue().getBytes(StandardCharsets.UTF_8));' '      } catch (Exception x) {' '        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, \"cannot write \" + e.getKey() + \": \" + x);' '      }' '    }' '    return false;' '  }' '}' > /tmp/rs-qp/src/org/kohsuke/stapler/jsr269/QueryParameterAnnotationProcessor.java",
