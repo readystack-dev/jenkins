@@ -31,8 +31,8 @@
     "context": ".",
     "dockerfile": "Dockerfile.offline.pinned",
     "mtime_policy": "clamp",
-    "source_date_epoch": 1795533721,
-    "tree_hash": "sha256:d69d169b5a9ef1575c173625681a0210bb19d63d3667e0068ded7c91f3124c01"
+    "source_date_epoch": 1795634558,
+    "tree_hash": "sha256:f2076cb95d37faa2accd0b78a618c0633b971514e05ab8932518c6539aed8ebb"
   },
   "probe": {
     "http_path": "/health/",
@@ -44,8 +44,8 @@
   },
   "schema": "readystack-rebuild-bundle/v0.1",
   "subject": {
-    "config_digest": "sha256:8cfcc0099798f6724ee815e0f99468a52ac2ab35298e528ba578cffdcbc32dc9",
-    "image_manifest_digest": "sha256:0a47b8492231f46d0faeb661bd81f74924276f20078ed7d292f9c182663c5f64",
-    "name": "docker.io/readystack/jenkins:2.580.2-CE-ubuntu24.04-r6"
+    "config_digest": "sha256:5d7b663ce77bbef3bd93b797145946c8b1c76aedb9a6b348b83640939a4bea37",
+    "image_manifest_digest": "sha256:a2a9014c201e36fe45ada15f148244b4045d29be50c119b3be5acba49d089c1a",
+    "name": "docker.io/readystack/jenkins:2.580.3-CE-ubuntu24.04-r1"
   }
 }

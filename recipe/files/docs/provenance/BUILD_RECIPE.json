@@ -1,11 +1,11 @@
 {
   "schema": "kitforge.build_recipe.v1",
   "slug": "jenkins",
-  "image": "readystack/jenkins:2.580.2-CE-ubuntu24.04-r6",
+  "image": "readystack/jenkins:2.580.3-CE-ubuntu24.04-r1",
   "build_method": "source-rebuild-java",
   "source": {
     "repo": "https://github.com/jenkinsci/jenkins",
-    "ref": "jenkins-2.580.2",
+    "ref": "jenkins-2.580.3",
     "builder_image": "maven:3.9.8-eclipse-temurin-21",
     "jdk_version": "21",
     "maven_version": "3.9.8",
@@ -52,8 +52,8 @@
     "install": {
       "extract_to": "/usr/share/jenkins"
     },
-    "source_date_epoch": 1795533721,
-    "source_date_epoch_provenance": "the time release 2.580.2-CE-ubuntu24.04-r6 was cut (2026-11-24T15:22:01Z), by scripts/rerelease-agenda.py: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit ea3f958268fe, dated 2026-10-26T11:33:17Z (source.commit_epoch).",
+    "source_date_epoch": 1795634558,
+    "source_date_epoch_provenance": "the time release 2.580.3-CE-ubuntu24.04-r1 was cut (2026-11-25T19:22:38Z), by scripts/retarget.py: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit 134a68096eb2, dated 2026-11-25T16:55:08Z (source.commit_epoch).",
     "_reproducibility_note": "Jenkins is unusually well placed here: its own pom.xml sets project.build.outputTimestamp (2026-08-31T16:31:21Z) and the README carries a Reproducible-Builds badge, so upstream already maintains byte-reproducibility of the war. Our MAVEN_ARGS injection overrides that property with this strategy's SOURCE_DATE_EPOCH, which is fine and arguably better \u2014 what matters is that the ONLINE and OFFLINE stages agree, and a single injected constant guarantees they do. NOT ENOUGH ON ITS OWN: upstream's reproducibility check evidently runs in a setting stable enough that stapler's identity-hash-ordered .stapler output repeats; ours did not -- see _source_prep_note for the one residual and its fix.",
     "_version_note": "jenkins-2.580.1 is the latest LTS GA (checked 2026-10-10 for r2: updates.jenkins.io/stable/latestCore.txt = 2.580.1, the newest LTS in repo.jenkins-ci.org's jenkins-war maven-metadata is 2.580.1, and jenkinsci/jenkins has no jenkins-2.580.2 tag or -rc yet; the latest WEEKLY is jenkins-2.585 and is deliberately not used \u2014 see _README). r2 is a revision release of 2.580.1. Java 17 is dead as of 2.555.1; the supported JDKs are 21 and 25.",
     "_offline_env_note": "offline_env is emitted into BOTH stages \u2014 the renderer does that deliberately, so the warmed cache matches the replay. Which means the offline-ONLY flags must NOT live here: COREPACK_ENABLE_NETWORK=0 in the online vendor stage would stop corepack fetching the Yarn 4 bundle, and the stage whose entire job is to WARM that cache would fail with nothing to warm. They are set inline on the offline mvn invocation instead. The render caught this before the first drive did.",
@@ -62,14 +62,14 @@
       "-Dmaven.buildNumber.revisionOnScmFailure=@COMMIT@"
     ],
     "_maven_args_extra_note": "build_kit strips .git from the build context on purpose -- a git directory makes the context non-deterministic -- and jenkins' parent pom (org.jenkins-ci:jenkins) binds buildnumber-maven-plugin:create at the validate phase. With no .git the plugin fails with 'Cannot get the revision information from the scm repository' and takes the whole reactor down, killing chain 423 at build_kit after 19 minutes. It is a VENDOR/OFFLINE ASYMMETRY: the vendor stage still has the clone it created, so the same Maven command succeeds there and the problem cannot appear until the hermetic build runs. revisionOnScmFailure is the plugin's own escape hatch for this exact path -- the observed error text is the else-branch it bypasses -- and the property name was read from the 3.2.1 plugin descriptor rather than guessed. The value is the @COMMIT@ token, which gen_dockerfile expands from source.commit -- the real commit the release tag dereferences to, the same sha source_date_epoch_provenance records -- so both stages stamp an identical, truthful revision. IT WAS A LITERAL SHA UNTIL 2026-10-04 and went stale: the retarget to 2.580.1 moved source.commit but not this flag, so chain 479's war and jenkins-core.jar both carried 'Implementation-Build: 01174bc4...' -- the 2.568.3 commit -- in their manifests. retarget.py only tokenizes ldflags; a token here cannot drift. Preferred over faking a git repo in the build stage (the rabbitmq approach), which would embed a fabricated revision in the shipped artifact. NOT setting -Dmaven.buildNumber.doCheck=false: the parent pom hardcodes doCheck in its <configuration>, which overrides the property expression, and doCheck demonstrably did not fail the build -- the reactor reached the revision call.",
-    "commit": "ea3f958268fe87ed86a5d1c2d90c5a99426b97ce",
+    "commit": "134a68096eb24391de1d12108606f268c7a95645",
     "vendor_closures": [
       {
         "name": "jenkins-plugins",
         "dest": "/plugins",
         "publisher": "The Jenkins project's update centre (https://updates.jenkins.io)",
-        "resolved_by": "jenkins-plugin-cli 2.15.0 for the five requested plugins against Jenkins 2.580.2, in the vendor stage of the published release 2.580.1-CE-ubuntu24.04-r4 (chain 681, 2026-10-27); read back from that release's SBOM (versions) and CHECKSUMS.sha256 (files) by scripts/jenkins-plugins-pin.py --from-archive",
-        "how": "The vendor stage downloads each plugin from the update centre by its exact version URL, checks all 63 files against the sha256 the update centre publishes for each (plugin-versions.json, read 2026-11-02, which equals the sha256 of the file the published r4 ships) in one `sha256sum -c`, and fails unless /plugins holds exactly those 63 files. scripts/jenkins-plugins-pin.py --verify also checks that every plugin each member needs is in the set at the version it needs or newer, and that none needs a newer Jenkins than 2.580.2.",
+        "resolved_by": "jenkins-plugin-cli 2.15.0 for the five requested plugins against Jenkins 2.580.3, in the vendor stage of the published release 2.580.1-CE-ubuntu24.04-r4 (chain 681, 2026-10-27); read back from that release's SBOM (versions) and CHECKSUMS.sha256 (files) by scripts/jenkins-plugins-pin.py --from-archive",
+        "how": "The vendor stage downloads each plugin from the update centre by its exact version URL, checks all 63 files against the sha256 the update centre publishes for each (plugin-versions.json, read 2026-11-02, which equals the sha256 of the file the published r4 ships) in one `sha256sum -c`, and fails unless /plugins holds exactly those 63 files. scripts/jenkins-plugins-pin.py --verify also checks that every plugin each member needs is in the set at the version it needs or newer, and that none needs a newer Jenkins than 2.580.3.",
         "requested": [
           "credentials",
           "git",
@@ -524,7 +524,7 @@
       }
     ],
     "source_date_epoch_basis": "release-cut",
-    "commit_epoch": 1793014397
+    "commit_epoch": 1795625708
   },
   "binaries_from_source": null,
   "runtime_packages": [

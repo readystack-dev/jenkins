@@ -14,10 +14,15 @@
       "min_version": "0.10.6-2ubuntu0.6",
       "package": "libssh-4",
       "reason": "USN-9187-1: libssh-4 0.10.6-2ubuntu0.5 -> 0.10.6-2ubuntu0.6"
+    },
+    {
+      "min_version": "1.20.1-6ubuntu2.12",
+      "package": "libgssapi-krb5-2",
+      "reason": "UBUNTU-CVE-2026-112314: libgssapi-krb5-2 1.20.1-6ubuntu2.10 -> 1.20.1-6ubuntu2.12"
     }
   ],
   "build_method": "source-rebuild-java",
-  "chain_id": 1209,
+  "chain_id": 1270,
   "dep_bumps": [],
   "expected_residuals": [],
   "images": [
@@ -72,8 +77,8 @@
     ],
     "build_tool": "maven",
     "builder_image": "maven:3.9.8-eclipse-temurin-21",
-    "commit": "ea3f958268fe87ed86a5d1c2d90c5a99426b97ce",
-    "commit_epoch": 1793014397,
+    "commit": "134a68096eb24391de1d12108606f268c7a95645",
+    "commit_epoch": 1795625708,
     "install": {
       "extract_to": "/usr/share/jenkins"
     },
@@ -95,11 +100,11 @@
       "cd /src && mvn -B -e -am -pl war,bom -Pquick-build -Dmaven.repo.local=/m2 clean install",
       "set -eu; P=/plugins/jackson2-api.jpi; N=2.22.3; W=/tmp/rs-jackson2; rm -rf \"$W\"; mkdir -p \"$W/x\"; cd \"$W/x\"; jar --extract --file \"$P\"; O=$(ls WEB-INF/lib | sed -n 's/^jackson-core-\\([0-9][0-9.]*\\)\\.jar$/\\1/p'); [ -n \"$O\" ] || { echo \"jackson2-api.jpi has no WEB-INF/lib/jackson-core-*.jar\" >&2; exit 1; }; if [ \"$(printf '%s\\n%s\\n' \"$O\" \"$N\" | sort -V | head -n1)\" = \"$N\" ]; then echo \"jackson2-api already bundles jackson $O (>= $N): overlay not applied\"; else case \"$O\" in 2.22.*) ;; *) echo \"jackson2-api bundles jackson $O, outside 2.22.x: this overlay only moves within 2.22\" >&2; exit 1;; esac; for s in com/fasterxml/jackson/core/jackson-core=8a501126a385b25841915d839508f8a66e2a0dbc8a6709d055ef3b3e852b094c com/fasterxml/jackson/core/jackson-databind=556db5439e206114346043f68d200497dc96a0bca62a360a81784092ebd0e0a9 com/fasterxml/jackson/dataformat/jackson-dataformat-cbor=0ed7167fdc432a409459602fba668eeb9a8d3623353439433970ee916336fc2b com/fasterxml/jackson/dataformat/jackson-dataformat-csv=f5585e657bcf62d77cc4d584571f344aa3973699aa1db1466496aeae96462e26 com/fasterxml/jackson/dataformat/jackson-dataformat-toml=b64f5bd51701daeefcd1a2c3e4f87a95a2ed61df18fa9c9ad2aef67a46143678 com/fasterxml/jackson/dataformat/jackson-dataformat-xml=8b99f4a11761246f2d721f02d2865dcca32dd8101082ebfbc3c16133b6c0d3e0 com/fasterxml/jackson/dataformat/jackson-dataformat-yaml=2bcbc3b9abaefbeba11409b9e30ec35ed7071a61a47c8c2a9c688e40e45b90f9 com/fasterxml/jackson/datatype/jackson-datatype-jdk8=f223061a5aaecdc9506458143807c73bcd1a744d6b3bbb8da4703a0abc408f7d com/fasterxml/jackson/datatype/jackson-datatype-json-org=15955136df8ef95adcf1be6c9cfb877326cd4cd997f5f58c36ac6aeef282ffdd com/fasterxml/jackson/datatype/jackson-datatype-jsr310=ec7052ee48c9d873bb8148338a643f02cf89c01d035dd219411473030d6d2b22 com/fasterxml/jackson/module/jackson-module-jakarta-xmlbind-annotations=ce2bbc8d3f27e9321a80e30231288aa0c340c100c45eb413efffbab7b98f3c1e com/fasterxml/jackson/module/jackson-module-jaxb-annotations=cdf7277e57e6aeb8414acdc1ca2b5de61e158db9c96d2a55f6f02285b87dda85 com/fasterxml/jackson/module/jackson-module-parameter-names=3f085667cd7b2dd9794a837b6e4a5c57779132bfc37b49b5c457870eee9d60ba; do p=${s%%=*}; h=${s#*=}; a=${p##*/}; [ -f \"WEB-INF/lib/$a-$O.jar\" ] || { echo \"jackson2-api.jpi has no WEB-INF/lib/$a-$O.jar\" >&2; exit 1; }; curl -fsSL -o \"WEB-INF/lib/$a-$N.jar\" \"https://repo1.maven.org/maven2/$p/$N/$a-$N.jar\"; echo \"$h  WEB-INF/lib/$a-$N.jar\" | sha256sum -c --quiet -; rm \"WEB-INF/lib/$a-$O.jar\"; done; L=$(ls WEB-INF/lib | grep -F -- \"-$O.jar\" || true); [ -z \"$L\" ] || { echo \"jackson2-api.jpi still bundles: $L\" >&2; exit 1; }; jar --list --file \"$P\" | grep -v '/$' | sed \"s/-$O\\.jar\\$/-$N.jar/\" > \"$W/order\"; jar --create --no-manifest --date=2026-08-17T11:08:00Z --file \"$W/new.jpi\" @\"$W/order\"; mv \"$W/new.jpi\" \"$P\"; echo \"jackson2-api.jpi: bundled jackson $O -> $N\"; fi; cd /; rm -rf \"$W\"; for f in /plugins/*.jpi /plugins/*.hpi; do [ -f \"$f\" ] || continue; for v in $(unzip -Z1 \"$f\" | sed -n 's|^WEB-INF/lib/jackson-\\(core\\|databind\\)-\\([0-9][0-9.]*\\)\\.jar$|\\2|p'); do [ \"$(printf '%s\\n%s\\n' \"$v\" \"$N\" | sort -V | head -n1)\" = \"$N\" ] || { echo \"$f bundles jackson-core/databind $v, below $N\" >&2; exit 1; }; done; done; echo \"jackson-core/databind floor $N holds across $(ls /plugins | wc -l) plugins\""
     ],
-    "ref": "jenkins-2.580.2",
+    "ref": "jenkins-2.580.3",
     "repo": "https://github.com/jenkinsci/jenkins",
-    "source_date_epoch": 1795533721,
+    "source_date_epoch": 1795634558,
     "source_date_epoch_basis": "release-cut",
-    "source_date_epoch_provenance": "the time release 2.580.2-CE-ubuntu24.04-r6 was cut (2026-11-24T15:22:01Z), by scripts/rerelease-agenda.py: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit ea3f958268fe, dated 2026-10-26T11:33:17Z (source.commit_epoch).",
+    "source_date_epoch_provenance": "the time release 2.580.3-CE-ubuntu24.04-r1 was cut (2026-11-25T19:22:38Z), by scripts/retarget.py: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit 134a68096eb2, dated 2026-11-25T16:55:08Z (source.commit_epoch).",
     "source_prep": [
       "mkdir -p /corepack /plugins",
       "mkdir -p /tmp/rs-qp/src/org/kohsuke/stapler/jsr269 /tmp/rs-qp/classes && printf '%s\\n' 'package org.kohsuke.stapler.jsr269;' 'import java.io.OutputStream;' 'import java.nio.charset.StandardCharsets;' 'import java.util.HashSet;' 'import java.util.Map;' 'import java.util.Set;' 'import java.util.TreeMap;' 'import javax.annotation.processing.AbstractProcessor;' 'import javax.annotation.processing.RoundEnvironment;' 'import javax.annotation.processing.SupportedAnnotationTypes;' 'import javax.lang.model.SourceVersion;' 'import javax.lang.model.element.Element;' 'import javax.lang.model.element.ElementKind;' 'import javax.lang.model.element.ExecutableElement;' 'import javax.lang.model.element.TypeElement;' 'import javax.lang.model.element.VariableElement;' 'import javax.tools.Diagnostic;' 'import javax.tools.StandardLocation;' '@SupportedAnnotationTypes(\"org.kohsuke.stapler.QueryParameter\")' 'public class QueryParameterAnnotationProcessor extends AbstractProcessor {' '  private final Set<String> written = new HashSet<>();' '  @Override public SourceVersion getSupportedSourceVersion() { return SourceVersion.latest(); }' '  @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {' '    TypeElement qp = processingEnv.getElementUtils().getTypeElement(\"org.kohsuke.stapler.QueryParameter\");' '    if (qp == null) return false;' '    Map<String, String> out = new TreeMap<>();' '    for (Element p : roundEnv.getElementsAnnotatedWith(qp)) {' '      if (p.getKind() != ElementKind.PARAMETER) continue;' '      ExecutableElement m = (ExecutableElement) p.getEnclosingElement();' '      TypeElement t = (TypeElement) m.getEnclosingElement();' '      StringBuilder names = new StringBuilder();' '      for (VariableElement v : m.getParameters()) { if (names.length() > 0) names.append(\",\"); names.append(v.getSimpleName()); }' '      out.merge(t.getQualifiedName().toString().replace(\".\", \"/\") + \"/\" + m.getSimpleName() + \".stapler\", names.toString(), (a, b) -> a.compareTo(b) <= 0 ? a : b);' '    }' '    for (Map.Entry<String, String> e : out.entrySet()) {' '      if (!written.add(e.getKey())) continue;' '      try (OutputStream os = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, \"\", e.getKey()).openOutputStream()) {' '        os.write(e.getValue().getBytes(StandardCharsets.UTF_8));' '      } catch (Exception x) {' '        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, \"cannot write \" + e.getKey() + \": \" + x);' '      }' '    }' '    return false;' '  }' '}' > /tmp/rs-qp/src/org/kohsuke/stapler/jsr269/QueryParameterAnnotationProcessor.java",
@@ -110,7 +115,7 @@
     "vendor_closures": [
       {
         "dest": "/plugins",
-        "how": "The vendor stage downloads each plugin from the update centre by its exact version URL, checks all 63 files against the sha256 the update centre publishes for each (plugin-versions.json, read 2026-11-02, which equals the sha256 of the file the published r4 ships) in one `sha256sum -c`, and fails unless /plugins holds exactly those 63 files. scripts/jenkins-plugins-pin.py --verify also checks that every plugin each member needs is in the set at the version it needs or newer, and that none needs a newer Jenkins than 2.580.2.",
+        "how": "The vendor stage downloads each plugin from the update centre by its exact version URL, checks all 63 files against the sha256 the update centre publishes for each (plugin-versions.json, read 2026-11-02, which equals the sha256 of the file the published r4 ships) in one `sha256sum -c`, and fails unless /plugins holds exactly those 63 files. scripts/jenkins-plugins-pin.py --verify also checks that every plugin each member needs is in the set at the version it needs or newer, and that none needs a newer Jenkins than 2.580.3.",
         "items": [
           {
             "file": "antisamy-markup-formatter.jpi",
@@ -563,7 +568,7 @@
           "matrix-auth",
           "configuration-as-code"
         ],
-        "resolved_by": "jenkins-plugin-cli 2.15.0 for the five requested plugins against Jenkins 2.580.2, in the vendor stage of the published release 2.580.1-CE-ubuntu24.04-r4 (chain 681, 2026-10-27); read back from that release's SBOM (versions) and CHECKSUMS.sha256 (files) by scripts/jenkins-plugins-pin.py --from-archive"
+        "resolved_by": "jenkins-plugin-cli 2.15.0 for the five requested plugins against Jenkins 2.580.3, in the vendor stage of the published release 2.580.1-CE-ubuntu24.04-r4 (chain 681, 2026-10-27); read back from that release's SBOM (versions) and CHECKSUMS.sha256 (files) by scripts/jenkins-plugins-pin.py --from-archive"
       }
     ],
     "vendor_dirs": [
@@ -572,5 +577,5 @@
       "/plugins"
     ]
   },
-  "version": "2.580.2"
+  "version": "2.580.3"
 }
